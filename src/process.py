@@ -20,8 +20,9 @@ class PCRProcess():
     def registration(self, PCRModel, methodName):
         if methodName=='DGM-Net':
             return PCRModel(self.cur_src_points, self.cur_src_normals, self.cur_src_knns, self.cur_tgt_points, self.cur_tgt_normals,self.cur_tgt_knns)
+        elif methodName in ['ICP','DGM']:
+            return PCRModel(self.cur_src_points,self.cur_src_normals,self.cur_tgt_points,self.cur_tgt_normals)
         return None
-
     def move(self):
         if self.current<self.total:
             self.cur_src_points,\

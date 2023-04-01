@@ -21,7 +21,7 @@ def DGMNetAPI(src_points, src_normals, src_knns, tgt_points, tgt_normals, tgt_kn
         device=torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         model=DGMNet().to(device)
         model.load_state_dict(torch.load('./baselines/dgmnet/checkpoints/epoch_240_fdgmnet_params.pth',map_location=device))
-
+        model_type='dgmnet'
     start=time.time()
     _, R, t = model(src_points, src_normals, src_knns, tgt_points, tgt_normals, tgt_knns)
     end=time.time()
@@ -29,9 +29,27 @@ def DGMNetAPI(src_points, src_normals, src_knns, tgt_points, tgt_normals, tgt_kn
     return R.cpu().detach().numpy()[0],t.detach().cpu().numpy()[0], time_cost
 
 
-def DGMAPI():
-    
-    pass
+def DGMAPI(src_points, src_normals, tgt_points, tgt_normals):
+    global model_type
+    global model
+    if model_type==None or model_type!='dgm':
+        model=DGM()
+        model_type='dgm'
+    start=time.time()
+    R, t, _, _ = model(src_points, src_normals, tgt_points, tgt_normals)
+    end=time.time()
+    time_cost=end-start
+    return R, t, time_cost
 
-def ICPAPI():
-    pass
+def ICPAPI(src_points, src_normals, tgt_points, tgt_normals):
+    global model_type
+    global model
+    if model_type==None or model_type!='icp':
+        model=ICP()
+        model_type='icp'
+    start=time.time()
+    R, t = model(src_points, src_normals, tgt_points, tgt_normals)
+    end=time.time()
+    time_cost=end-start
+    return R, t, time_cost
+    

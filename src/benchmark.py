@@ -93,7 +93,6 @@ class MainWindow(QMainWindow,benchmarkUI):
         self.progressBar.setValue(self.process.getCurrent())
         gt_R=np.around(gt_R,4)
         gt_t=np.around(gt_t,4)
-        print(gt_R)
         self.gtR.setText(str(gt_R))
         self.gtT.setText(str(gt_t))
         self.processBarLabel.setText(str(cur)+' / '+str(total))

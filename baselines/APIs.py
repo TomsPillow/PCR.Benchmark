@@ -1,6 +1,8 @@
 import torch
 import time
 from baselines.dgmnet.model.dgmnet import DGMNet
+from baselines.dgm.model.dgm import DGM
+from baselines.icp.model.icp import ICP
 
 model=None
 model_type=None
@@ -28,6 +30,7 @@ def DGMNetAPI(src_points, src_normals, src_knns, tgt_points, tgt_normals, tgt_kn
 
 
 def DGMAPI():
+    
     pass
 
 def ICPAPI():

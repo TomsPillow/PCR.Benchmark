@@ -29,16 +29,6 @@
     <attribute name="title">
      <string>Tab 1</string>
     </attribute>
-    <widget class="QOpenGLWidget" name="openGLWidget">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>30</y>
-       <width>961</width>
-       <height>641</height>
-      </rect>
-     </property>
-    </widget>
     <widget class="QLabel" name="label_2">
      <property name="geometry">
       <rect>
@@ -346,6 +336,17 @@
      <property name="text">
       <string>Blue: Estimated Point Cloud</string>
      </property>
+    </widget>
+    <widget class="QWidget" name="horizontalLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>40</y>
+       <width>971</width>
+       <height>631</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_4"/>
     </widget>
    </widget>
   </widget>

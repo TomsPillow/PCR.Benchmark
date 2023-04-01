@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'ui/PCR.Benchmark.ui'
+# Form implementation generated from reading ui file './ui/PCR.Benchmark.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -20,9 +20,6 @@ class benchmarkUI(object):
         self.tabWidget.setObjectName("tabWidget")
         self.tab = QtWidgets.QWidget()
         self.tab.setObjectName("tab")
-        self.openGLWidget = QtWidgets.QOpenGLWidget(self.tab)
-        self.openGLWidget.setGeometry(QtCore.QRect(20, 30, 961, 641))
-        self.openGLWidget.setObjectName("openGLWidget")
         self.label_2 = QtWidgets.QLabel(self.tab)
         self.label_2.setGeometry(QtCore.QRect(20, 10, 121, 16))
         self.label_2.setObjectName("label_2")
@@ -101,6 +98,12 @@ class benchmarkUI(object):
         self.label_20 = QtWidgets.QLabel(self.tab)
         self.label_20.setGeometry(QtCore.QRect(390, 680, 171, 16))
         self.label_20.setObjectName("label_20")
+        self.horizontalLayoutWidget = QtWidgets.QWidget(self.tab)
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(20, 40, 971, 631))
+        self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
+        self.PCViewer = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
+        self.PCViewer.setContentsMargins(0, 0, 0, 0)
+        self.PCViewer.setObjectName("PCViewer")
         self.tabWidget.addTab(self.tab, "")
         self.frame = QtWidgets.QFrame(Form)
         self.frame.setGeometry(QtCore.QRect(380, 810, 1271, 71))
@@ -167,9 +170,9 @@ class benchmarkUI(object):
         self.listView = QtWidgets.QListView(self.layoutWidget2)
         self.listView.setObjectName("listView")
         self.verticalLayout.addWidget(self.listView)
-        self.runButton = QtWidgets.QPushButton(self.groupBox)
-        self.runButton.setGeometry(QtCore.QRect(190, 330, 113, 32))
-        self.runButton.setObjectName("runButton")
+        self.loadButton = QtWidgets.QPushButton(self.groupBox)
+        self.loadButton.setGeometry(QtCore.QRect(190, 330, 113, 32))
+        self.loadButton.setObjectName("loadButton")
 
         self.retranslateUi(Form)
         self.tabWidget.setCurrentIndex(0)
@@ -203,4 +206,4 @@ class benchmarkUI(object):
         self.label.setText(_translate("Form", "PCR Method:"))
         self.label_10.setText(_translate("Form", "Dataset Files(HDF5) Directory:"))
         self.toolButton.setText(_translate("Form", "..."))
-        self.runButton.setText(_translate("Form", "Run"))
+        self.loadButton.setText(_translate("Form", "Load"))

@@ -20,6 +20,7 @@ class MainWindow(QMainWindow,benchmarkUI):
         self.PCWidget=gl.GLViewWidget()
         self.PCWidget.setBackgroundColor(96,96,96,255)
         self.PCViewer.addWidget(self.PCWidget)
+        self.progressBar.setValue(0)
 
         # verify PCR Methods
         self.comboBox.addItem('DGM-Net')

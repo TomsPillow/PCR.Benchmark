@@ -4,9 +4,12 @@ from dataset import dataset
 from utils.metrics import R_error, t_error
 from utils.transform import transform
 
+DP_PCRMethods=['DGM-Net','PCRNet']
+NORM_PCRMethods=['DGM','ICP']
+
 class PCRProcess():
     def __init__(self,h5fs_list,GaussNoise=False,sigma=0.1,bias=0.05):
-        self.current=0
+        self.current=-1
         self.data=dataset(h5fs_list=h5fs_list,noise=GaussNoise,sigma=sigma,clip=bias)
         self.total=self.data.__len__()
         self.cur_src_points=None
@@ -19,14 +22,15 @@ class PCRProcess():
         self.cur_gt_t=None
 
     def registration(self, PCRModel, methodName, checkpoint=None):
-        if methodName in ['DGM-Net']:
+        if methodName in DP_PCRMethods:
             return PCRModel(checkpoint, self.cur_src_points, self.cur_src_normals, self.cur_src_knns, self.cur_tgt_points, self.cur_tgt_normals,self.cur_tgt_knns)
-        elif methodName in ['ICP','DGM']:
+        elif methodName in NORM_PCRMethods:
             return PCRModel(self.cur_src_points,self.cur_src_normals,self.cur_tgt_points,self.cur_tgt_normals)
         return None
 
     def move(self):
         if self.current<self.total:
+            self.current+=1
             self.cur_src_points,\
             self.cur_src_normals,\
             self.cur_src_knns,\
@@ -35,7 +39,20 @@ class PCRProcess():
             self.cur_tgt_knns,\
             self.cur_gt_R,\
             self.cur_gt_t=self.data.__getitem__(self.current)
-            self.current+=1
+            
+            return self.cur_src_points, self.cur_tgt_points, self.cur_gt_R, self.cur_gt_t, self.current, self.total
+        
+    def back(self):
+        if self.current>0:
+            self.current-=1
+            self.cur_src_points,\
+            self.cur_src_normals,\
+            self.cur_src_knns,\
+            self.cur_tgt_points,\
+            self.cur_tgt_normals,\
+            self.cur_tgt_knns,\
+            self.cur_gt_R,\
+            self.cur_gt_t=self.data.__getitem__(self.current)
             return self.cur_src_points, self.cur_tgt_points, self.cur_gt_R, self.cur_gt_t, self.current, self.total
         
     def metrics(self, est_R, est_t):

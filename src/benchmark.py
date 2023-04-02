@@ -2,18 +2,15 @@ import sys
 import os
 sys.path.append('.')
 import numpy as np
-from baselines.APIs import DGMNetAPI, DGMAPI, ICPAPI
+from baselines.APIs import DGMNetAPI, PCRNetAPI, DGMAPI, ICPAPI
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 import pyqtgraph.opengl as gl
 from src.ui import benchmarkUI
 from process import PCRProcess
-
+from src.process import DP_PCRMethods,NORM_PCRMethods
 PCR_VIEW_EXPAND=3
 PCR_VIEW_POINTSIZE=0.08
-
-DP_PCRMethods=['DGM-Net']
-NORM_PCRMethods=['DGM','ICP']
 
 class MainWindow(QMainWindow,benchmarkUI):
     def __init__(self):
@@ -40,6 +37,9 @@ class MainWindow(QMainWindow,benchmarkUI):
         # verify PCR Methods
         self.comboBox.currentTextChanged.connect(self.verifyPCRAPI)
         
+        # verify DP Method checkpoint
+        self.checkpointSelect.clicked.connect(self.verifyCheckpoint)
+        
         # verify Datasets HDF5 Files directory
         self.listModel=QStandardItemModel()
         self.toolButton.clicked.connect(self.verifyDatasetDir)
@@ -51,7 +51,10 @@ class MainWindow(QMainWindow,benchmarkUI):
         self.loadButton.clicked.connect(self.load)
 
         # move
-        self.nextButton.clicked.connect(self.move)
+        self.moveButton.clicked.connect(self.move)
+        
+        # back
+        self.backButton.clicked.connect(self.back)
 
         # registration
         self.registrationButton.clicked.connect(self.registration)
@@ -72,14 +75,14 @@ class MainWindow(QMainWindow,benchmarkUI):
             for it in DP_PCRMethods:
                 self.comboBox.addItem(it)
 
-
     def getPCRMetohd(self):
         return self.comboBox.currentText()
 
     def verifyDatasetDir(self):
-        self.datasetDir=QFileDialog.getExistingDirectory(caption='select directory contains point cloud data files(.h5)',directory='/')
+        self.datasetDir=QFileDialog.getExistingDirectory(caption='select directory contains point cloud data files(.h5)',directory='./dataset')
         self.lineEdit.setText(self.datasetDir)
         fs=os.listdir(self.datasetDir)
+        self.listModel.clear()
         for f in fs:
             if f.endswith('.h5') or f.endswith('hdf5'):
                 item=QStandardItem(f)
@@ -88,7 +91,7 @@ class MainWindow(QMainWindow,benchmarkUI):
         self.listView.setModel(self.listModel)
 
     def verifyCheckpoint(self):
-        checkpoint=QFileDialog.getOpenFileName(caption='select your model checkpoint file',directory='/',filter='Checkpoint File(*.pth)')
+        checkpoint,_=QFileDialog.getOpenFileName(caption='select your model checkpoint file',directory='./baselines',filter='Checkpoint File(*.pth)')
         self.checkpointLine.setText(checkpoint)
 
     def getTestFiles(self):
@@ -102,15 +105,23 @@ class MainWindow(QMainWindow,benchmarkUI):
         methodName=self.getPCRMetohd()
         if methodName=='DGM-Net':
             self.PCRAPI=DGMNetAPI
+        elif methodName=='PCRNet':
+            self.PCRAPI=PCRNetAPI
         elif methodName=='DGM':
             self.PCRAPI=DGMAPI
         elif methodName=='ICP':
             self.PCRAPI=ICPAPI
 
     def load(self):
-        hasGaussNoise=False if self.addGaussNoise.isChecked() else True
-        sigma=float(self.sigmaLine.text())
-        bias=float(self.biasLine.text())
+        hasGaussNoise=True if self.addGaussNoise.isChecked() else False
+        if len(self.sigmaLine.text())>0:
+            sigma=float(self.sigmaLine.text())
+        else:
+            sigma=None
+        if len(self.biasLine.text())>0:
+            bias=float(self.biasLine.text())
+        else:
+            bias=None
         self.process=PCRProcess(self.getTestFiles(),GaussNoise=hasGaussNoise,sigma=sigma,bias=bias)
         self.progressBar.setMinimum(0)
         self.progressBar.setMaximum(self.process.getTotal())
@@ -149,6 +160,24 @@ class MainWindow(QMainWindow,benchmarkUI):
         tgt_plot=gl.GLScatterPlotItem()
         tgt_plot.setData(pos=PCR_VIEW_EXPAND*tgt_pc, color=(1., 0., 0., 1), size=PCR_VIEW_POINTSIZE, pxMode=False)
         
+        self.PCWidget.clear()
+        self.PCWidget.addItem(src_plot)
+        self.PCWidget.addItem(tgt_plot)
+
+    def back(self):
+        src_pc,tgt_pc,gt_R,gt_t,cur,total=self.process.back()
+        self.progressBar.setValue(self.process.getCurrent())
+        gt_R=np.around(gt_R,4)
+        gt_t=np.around(gt_t,4)
+        self.gtR.setText(str(gt_R))
+        self.gtT.setText(str(gt_t))
+        self.processBarLabel.setText(str(cur)+' / '+str(total))
+        # view point cloud
+        src_plot=gl.GLScatterPlotItem()
+        src_plot.setData(pos=PCR_VIEW_EXPAND*src_pc, color=(0., 1., 0., 1), size=PCR_VIEW_POINTSIZE, pxMode=False)
+        tgt_plot=gl.GLScatterPlotItem()
+        tgt_plot.setData(pos=PCR_VIEW_EXPAND*tgt_pc, color=(1., 0., 0., 1), size=PCR_VIEW_POINTSIZE, pxMode=False)
+
         self.PCWidget.clear()
         self.PCWidget.addItem(src_plot)
         self.PCWidget.addItem(tgt_plot)

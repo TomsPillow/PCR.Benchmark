@@ -15,7 +15,7 @@ To facilitate the test of the registration performance of each point cloud regis
 - [x] DGM-Net
 - [ ] [RPM-Net](https://github.com/yewzijian/RPMNet)
 - [ ] [RGM](https://github.com/fukexue/RGM)
-- [ ] [PCRNet](https://github.com/vinits5/pcrnet_pytorch)
+- [x] [PCRNet](https://github.com/zhulf0804/PCReg.PyTorch)
 
 
 

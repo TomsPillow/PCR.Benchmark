@@ -345,9 +345,9 @@
   <widget class="QFrame" name="frame">
    <property name="geometry">
     <rect>
-     <x>380</x>
+     <x>400</x>
      <y>810</y>
-     <width>1271</width>
+     <width>1251</width>
      <height>71</height>
     </rect>
    </property>
@@ -375,14 +375,14 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="backButton">
        <property name="text">
         <string>Back</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="nextButton">
+      <widget class="QPushButton" name="moveButton">
        <property name="text">
         <string>Next</string>
        </property>
@@ -424,7 +424,7 @@
      <x>20</x>
      <y>60</y>
      <width>361</width>
-     <height>471</height>
+     <height>691</height>
     </rect>
    </property>
    <property name="title">
@@ -458,7 +458,7 @@
       <x>30</x>
       <y>160</y>
       <width>301</width>
-      <height>251</height>
+      <height>151</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -518,16 +518,13 @@
        </item>
       </layout>
      </item>
-     <item>
-      <widget class="QListView" name="listView"/>
-     </item>
     </layout>
    </widget>
    <widget class="QPushButton" name="loadButton">
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>420</y>
+      <y>610</y>
       <width>113</width>
       <height>32</height>
      </rect>
@@ -595,6 +592,16 @@
       <y>120</y>
       <width>261</width>
       <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListView" name="listView">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>320</y>
+      <width>301</width>
+      <height>271</height>
      </rect>
     </property>
    </widget>

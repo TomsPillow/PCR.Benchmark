@@ -12,10 +12,25 @@ from process import PCRProcess
 PCR_VIEW_EXPAND=3
 PCR_VIEW_POINTSIZE=0.08
 
+DP_PCRMethods=['DGM-Net']
+NORM_PCRMethods=['DGM','ICP']
+
 class MainWindow(QMainWindow,benchmarkUI):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setupUi(self)
+        # init
+        self.addGaussNoise.setChecked(False)
+        self.sigmaLine.setDisabled(True)
+        self.biasLine.setDisabled(True)
+        self.dpMethods.toggled.connect(self.dpMethodsClicked)
+        self.normMethods.toggled.connect(self.normMethodsClicked)
+        self.dpMethods.setChecked(True)
+        self.checkpointLine.setEnabled(True)
+        self.normMethods.setChecked(False)
+        for it in DP_PCRMethods:
+            self.comboBox.addItem(it)
+
         # set point cloud viewer
         self.PCWidget=gl.GLViewWidget()
         self.PCWidget.setBackgroundColor(96,96,96,255)
@@ -23,23 +38,40 @@ class MainWindow(QMainWindow,benchmarkUI):
         self.progressBar.setValue(0)
 
         # verify PCR Methods
-        self.comboBox.addItem('DGM-Net')
-        self.comboBox.addItem('DGM')
-        self.comboBox.addItem('ICP')
         self.comboBox.currentTextChanged.connect(self.verifyPCRAPI)
         
         # verify Datasets HDF5 Files directory
         self.listModel=QStandardItemModel()
         self.toolButton.clicked.connect(self.verifyDatasetDir)
 
+        # addGaussNoise
+        self.addGaussNoise.toggled.connect(self.hasGaussNoise)
+
         # load
         self.loadButton.clicked.connect(self.load)
-        
+
         # move
         self.nextButton.clicked.connect(self.move)
 
         # registration
         self.registrationButton.clicked.connect(self.registration)
+
+    def dpMethodsClicked(self):
+        if self.dpMethods.isChecked()==False:
+            self.checkpointLine.setDisabled(True)
+            self.normMethods.setChecked(True)
+            self.comboBox.clear()
+            for it in NORM_PCRMethods:
+                self.comboBox.addItem(it)
+
+    def normMethodsClicked(self):
+        if self.normMethods.isChecked()==False:
+            self.checkpointLine.setEnabled(True)
+            self.dpMethods.setChecked(True)
+            self.comboBox.clear()
+            for it in DP_PCRMethods:
+                self.comboBox.addItem(it)
+
 
     def getPCRMetohd(self):
         return self.comboBox.currentText()
@@ -72,7 +104,10 @@ class MainWindow(QMainWindow,benchmarkUI):
             self.PCRAPI=ICPAPI
 
     def load(self):
-        self.process=PCRProcess(self.getTestFiles())
+        hasGaussNoise=False if self.addGaussNoise.isChecked() else True
+        sigma=float(self.sigmaLine.text())
+        bias=float(self.biasLine.text())
+        self.process=PCRProcess(self.getTestFiles(),GaussNoise=hasGaussNoise,sigma=sigma,bias=bias)
         self.progressBar.setMinimum(0)
         self.progressBar.setMaximum(self.process.getTotal())
         self.move()
@@ -113,6 +148,14 @@ class MainWindow(QMainWindow,benchmarkUI):
         self.PCWidget.clear()
         self.PCWidget.addItem(src_plot)
         self.PCWidget.addItem(tgt_plot)
+
+    def hasGaussNoise(self):
+        self.sigmaLine.setEnabled(True)
+        self.biasLine.setEnabled(True)
+        if len(self.sigmaLine.text())==0:
+            self.sigmaLine.setText('0.1')
+        if len(self.biasLine.text())==0:
+            self.biasLine.setText('0.05')
 
 if __name__ == '__main__':
     app=QApplication(sys.argv)

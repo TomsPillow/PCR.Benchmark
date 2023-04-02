@@ -6,8 +6,8 @@ from baselines.icp.model.icp import ICP
 
 model=None
 model_type=None
-
-def DGMNetAPI(src_points, src_normals, src_knns, tgt_points, tgt_normals, tgt_knns):
+model_checkpoint=None
+def DGMNetAPI(checkpoint, src_points, src_normals, src_knns, tgt_points, tgt_normals, tgt_knns):
     global model_type
     global model
     src_points=torch.as_tensor(src_points).unsqueeze(0)
@@ -20,8 +20,11 @@ def DGMNetAPI(src_points, src_normals, src_knns, tgt_points, tgt_normals, tgt_kn
     if model_type==None or model_type!='dgmnet':
         device=torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         model=DGMNet().to(device)
-        model.load_state_dict(torch.load('./baselines/dgmnet/checkpoints/epoch_240_fdgmnet_params.pth',map_location=device))
         model_type='dgmnet'
+    if model_checkpoint==None or model_checkpoint!=checkpoint:
+        model.load_state_dict(torch.load(checkpoint, map_location=device))
+        model_checkpoint=checkpoint
+
     start=time.time()
     _, R, t = model(src_points, src_normals, src_knns, tgt_points, tgt_normals, tgt_knns)
     end=time.time()

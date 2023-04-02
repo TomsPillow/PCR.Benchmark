@@ -5,9 +5,9 @@ from utils.metrics import R_error, t_error
 from utils.transform import transform
 
 class PCRProcess():
-    def __init__(self,h5fs_list,):
+    def __init__(self,h5fs_list,GaussNoise=False,sigma=0.1,bias=0.05):
         self.current=0
-        self.data=dataset(h5fs_list=h5fs_list)
+        self.data=dataset(h5fs_list=h5fs_list,noise=GaussNoise,sigma=sigma,clip=bias)
         self.total=self.data.__len__()
         self.cur_src_points=None
         self.cur_src_normals=None

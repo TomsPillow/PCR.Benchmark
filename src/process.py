@@ -18,9 +18,9 @@ class PCRProcess():
         self.cur_gt_R=None
         self.cur_gt_t=None
 
-    def registration(self, PCRModel, methodName):
-        if methodName=='DGM-Net':
-            return PCRModel(self.cur_src_points, self.cur_src_normals, self.cur_src_knns, self.cur_tgt_points, self.cur_tgt_normals,self.cur_tgt_knns)
+    def registration(self, PCRModel, methodName, checkpoint=None):
+        if methodName in ['DGM-Net']:
+            return PCRModel(checkpoint, self.cur_src_points, self.cur_src_normals, self.cur_src_knns, self.cur_tgt_points, self.cur_tgt_normals,self.cur_tgt_knns)
         elif methodName in ['ICP','DGM']:
             return PCRModel(self.cur_src_points,self.cur_src_normals,self.cur_tgt_points,self.cur_tgt_normals)
         return None

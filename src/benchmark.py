@@ -77,7 +77,7 @@ class MainWindow(QMainWindow,benchmarkUI):
         return self.comboBox.currentText()
 
     def verifyDatasetDir(self):
-        self.datasetDir=QFileDialog.getExistingDirectory(caption="select directory contains point cloud data files(.h5)",directory="/")
+        self.datasetDir=QFileDialog.getExistingDirectory(caption='select directory contains point cloud data files(.h5)',directory='/')
         self.lineEdit.setText(self.datasetDir)
         fs=os.listdir(self.datasetDir)
         for f in fs:
@@ -86,6 +86,10 @@ class MainWindow(QMainWindow,benchmarkUI):
                 item.setCheckable(True)
                 self.listModel.appendRow(item)
         self.listView.setModel(self.listModel)
+
+    def verifyCheckpoint(self):
+        checkpoint=QFileDialog.getOpenFileName(caption='select your model checkpoint file',directory='/',filter='Checkpoint File(*.pth)')
+        self.checkpointLine.setText(checkpoint)
 
     def getTestFiles(self):
         res=[]
@@ -114,7 +118,7 @@ class MainWindow(QMainWindow,benchmarkUI):
         
     def registration(self):
         self.verifyPCRAPI()
-        est_R,est_t,time_cost = self.process.registration(self.PCRAPI, self.getPCRMetohd())
+        est_R,est_t,time_cost = self.process.registration(self.PCRAPI, self.getPCRMetohd(), self.checkpointLine.text())
         est_pc=self.process.transform(est_R, est_t)
         est_plot=gl.GLScatterPlotItem()
         est_plot.setData(pos=PCR_VIEW_EXPAND*est_pc, color=(0., 0., 1., 1), size=PCR_VIEW_POINTSIZE, pxMode=False)

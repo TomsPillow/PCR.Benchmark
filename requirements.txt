@@ -1,0 +1,8 @@
+h5py==3.8.0
+matplotlib==3.5.3
+numpy==1.21.6
+open3d==0.16.1
+PyQt5==5.15.9
+pyqtgraph==0.12.4
+scipy==1.7.3
+torch==1.13.1

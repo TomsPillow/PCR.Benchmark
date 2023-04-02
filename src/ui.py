@@ -180,7 +180,7 @@ class benchmarkUI(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        Form.setWindowTitle(_translate("Form", "PCR.Benchmark"))
         self.label_2.setText(_translate("Form", "Point Clouds View:"))
         self.label_4.setText(_translate("Form", "Ground truth rotation:"))
         self.label_5.setText(_translate("Form", "Ground truth translation:"))

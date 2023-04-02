@@ -27,5 +27,31 @@ You can select point cloud data files (*.hdf5/h5), which contain point clouds in
 
 
 
+## Requirements
+
+Python3.7 is highly recommended for the compatibility of Open3D. And requirements are listed as follows:
+
+* h5py==3.8.0
+* matplotlib==3.5.3
+* numpy==1.21.6
+* open3d==0.16.1
+* PyQt5==5.15.9
+* pyqtgraph==0.12.4
+* scipy==1.7.3
+* torch==1.13.1
+
+To configure the environment, simply enter this command: 
+
+```shell
+pip3 install -r requirements.txt
+```
+
+
+
 ## Run
-> python3 ./src/benchmark.py
+
+You can run the PCR.Benchmark with the command: 
+
+```shell
+python3 ./src/benchmark.py
+```

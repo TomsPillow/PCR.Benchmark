@@ -1,7 +1,7 @@
 import open3d as o3d
 import h5py as h5
 import numpy as np
-from utils.generator import generate_random_rotation_matrix, generate_random_tranlation_vector, jitter_point_cloud
+from utils.generator import generate_random_rotation_matrix, generate_random_translation_vector, jitter_point_cloud
 from utils.tools import shuffle,estimate_normals
 from utils.transform import transform
 
@@ -38,7 +38,7 @@ class dataset():
         
     def __getitem__(self, index):
         gt_R = generate_random_rotation_matrix()
-        gt_t = generate_random_tranlation_vector()
+        gt_t = generate_random_translation_vector()
         src_points = self.xyzs[index]
         shuffed_idx, tgt_points = shuffle(src_points)
         tgt_points = transform(tgt_points.transpose(1,0), gt_R, gt_t).transpose(1,0)

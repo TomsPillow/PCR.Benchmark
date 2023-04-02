@@ -36,9 +36,9 @@ def generate_random_rotation_matrix(angle1=-45, angle2=45):
     return np.dot(matz, np.dot(maty, matx))
 
 
-def generate_random_tranlation_vector(range1=-1, range2=1):
-    tranlation_vector = np.random.uniform(range1, range2, size=(3, )).astype(np.float32)
-    return tranlation_vector
+def generate_random_translation_vector(range1=-1, range2=1):
+    translation_vector = np.random.uniform(range1, range2, size=(3, )).astype(np.float32)
+    return translation_vector
 
 def jitter_point_cloud(pc, sigma=0.01, clip=0.05):
     N, C = pc.shape

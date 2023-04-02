@@ -1,10 +1,10 @@
-# A Point Cloud Registration Benchmark Platform
+# A Point Cloud Registration Benchmark
 
 
 
 ## Introduction
 
-In order to test the registration performance of each point cloud registration baseline, a point cloud registration test graphical interface based on PyQt5 is developed.
+To facilitate the test of the registration performance of each point cloud registration baseline, a point cloud registration benchmark GUI based on **PyQt5** is developed.
 
 
 

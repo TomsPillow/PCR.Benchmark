@@ -5,17 +5,21 @@ import numpy as np
 from baselines.APIs import DGMNetAPI, DGMAPI, ICPAPI
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
-# import pyqtgraph.opengl as gl
+import pyqtgraph.opengl as gl
 from src.ui import benchmarkUI
 from process import PCRProcess
+
+PCR_VIEW_EXPAND=3
+PCR_VIEW_POINTSIZE=0.08
 
 class MainWindow(QMainWindow,benchmarkUI):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setupUi(self)
         # set point cloud viewer
-        # self.PCWidget=gl.GLViewWidget()
-        # self.PCViewer.addWidget(self.PCWidget)
+        self.PCWidget=gl.GLViewWidget()
+        self.PCWidget.setBackgroundColor(96,96,96,255)
+        self.PCViewer.addWidget(self.PCWidget)
 
         # verify PCR Methods
         self.comboBox.addItem('DGM-Net')
@@ -75,6 +79,10 @@ class MainWindow(QMainWindow,benchmarkUI):
     def registration(self):
         self.verifyPCRAPI()
         est_R,est_t,time_cost = self.process.registration(self.PCRAPI, self.getPCRMetohd())
+        est_pc=self.process.transform(est_R, est_t)
+        est_plot=gl.GLScatterPlotItem()
+        est_plot.setData(pos=PCR_VIEW_EXPAND*est_pc, color=(0., 0., 1., 1), size=PCR_VIEW_POINTSIZE, pxMode=False)
+        self.PCWidget.addItem(est_plot)
         R_MSE,R_MAE,R_isotropic,t_MSE,t_MAE,t_isotropic=self.process.metrics(est_R, est_t)
         est_R=np.around(est_R,4)
         est_t=np.around(est_t,4)
@@ -86,7 +94,6 @@ class MainWindow(QMainWindow,benchmarkUI):
         self.tMSE.setText(str(t_MSE))
         self.tMAE.setText(str(t_MAE))
         self.tIsotropic.setText(str(t_isotropic))
-        self.move()
 
     def move(self):
         src_pc,tgt_pc,gt_R,gt_t,cur,total=self.process.move()
@@ -97,10 +104,14 @@ class MainWindow(QMainWindow,benchmarkUI):
         self.gtT.setText(str(gt_t))
         self.processBarLabel.setText(str(cur)+' / '+str(total))
         # view point cloud
-        # plot=gl.GLScatterPlotItem()
-        # plot.setData(pos=src_pc, color=(1, 1, 1, 1), size=0.001, pxMode=False)
-        # self.PCWidget.clear()
-        # self.PCWidget.addItem(plot)
+        src_plot=gl.GLScatterPlotItem()
+        src_plot.setData(pos=PCR_VIEW_EXPAND*src_pc, color=(0., 1., 0., 1), size=PCR_VIEW_POINTSIZE, pxMode=False)
+        tgt_plot=gl.GLScatterPlotItem()
+        tgt_plot.setData(pos=PCR_VIEW_EXPAND*tgt_pc, color=(1., 0., 0., 1), size=PCR_VIEW_POINTSIZE, pxMode=False)
+        
+        self.PCWidget.clear()
+        self.PCWidget.addItem(src_plot)
+        self.PCWidget.addItem(tgt_plot)
 
 if __name__ == '__main__':
     app=QApplication(sys.argv)

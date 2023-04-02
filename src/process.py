@@ -2,6 +2,7 @@ import json
 import datetime
 from dataset import dataset
 from utils.metrics import R_error, t_error
+from utils.transform import transform
 
 class PCRProcess():
     def __init__(self,h5fs_list,):
@@ -23,6 +24,7 @@ class PCRProcess():
         elif methodName in ['ICP','DGM']:
             return PCRModel(self.cur_src_points,self.cur_src_normals,self.cur_tgt_points,self.cur_tgt_normals)
         return None
+
     def move(self):
         if self.current<self.total:
             self.cur_src_points,\
@@ -50,5 +52,6 @@ class PCRProcess():
     def getProgress(self):
         return self.current / self.total
         
-    
+    def transform(self, R, t):
+        return transform(self.cur_src_points.transpose(1,0), R, t).transpose(1,0)
     

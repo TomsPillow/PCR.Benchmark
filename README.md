@@ -20,11 +20,15 @@ To facilitate the test of the registration performance of each point cloud regis
 
 
 ## Data Simulation
+Point cloud data `modelnet40_ply_hdf5_2048` from ModelNet40 are given here.
 
 ### Clean Data
 
 You can select point cloud data files (*.hdf5/h5), which contain point clouds in the format `Point-Cloud-Num x Point-Num x 3`. Random rotation matrix and translation vector will be generated with the angles in $[-45\degree,45\degree]$  and translation in $[-1,1]$ of XYZ axis.
 
+### Noise Data
+
+You can add gauss noise into the target point cloud datas with bias in XYZ axis for registration tests.
 
 
 ## Requirements

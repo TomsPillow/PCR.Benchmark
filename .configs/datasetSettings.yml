@@ -1,6 +1,0 @@
-name: modelnet40_ply_hdf5_2048
-batch_size: 1
-worker_num: 1
-h5_list:
-  - 'src/dataset/modelnet40_ply_hdf5_2048/ply_data_test0.h5'
-  - 'src/dataset/modelnet40_ply_hdf5_2048/ply_data_test1.h5'

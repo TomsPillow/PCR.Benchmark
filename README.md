@@ -13,9 +13,9 @@ In order to test the registration performance of each point cloud registration b
 - [x] ICP
 - [x] DGM
 - [x] DGM-Net
-- [ ] RPM-Net
-- [ ] RGM
-- [ ] PCRNet
+- [ ] [RPM-Net](https://github.com/yewzijian/RPMNet)
+- [ ] [RGM](https://github.com/fukexue/RGM)
+- [ ] [PCRNet](https://github.com/vinits5/pcrnet_pytorch)
 
 
 

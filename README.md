@@ -6,6 +6,7 @@
 
 To facilitate the test of the registration performance of each point cloud registration baseline, a point cloud registration benchmark GUI based on **PyQt5** is developed.
 
+![benchmark](./docs/images/benchmark.png)
 
 
 ## Point Cloud Registration Baselines Currently Supported

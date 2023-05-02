@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append('.')
 import numpy as np
-from baselines.APIs import DGMNetAPI, PCRNetAPI, DGMAPI, ICPAPI
+from src.baselines.APIs import DGMNetAPI, PCRNetAPI, DGMAPI, ICPAPI
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 import pyqtgraph.opengl as gl

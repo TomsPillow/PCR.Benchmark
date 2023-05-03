@@ -12,6 +12,8 @@ To facilitate the test of the registration performance of each point cloud regis
 ## Point Cloud Registration Baselines Currently Supported
 
 - [x] ICP
+- [x] GMM
+- [x] FGR
 - [x] DGM
 - [x] DGM-Net
 - [ ] [RPM-Net](https://github.com/yewzijian/RPMNet)

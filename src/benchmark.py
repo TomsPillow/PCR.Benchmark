@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append('.')
 import numpy as np
-from src.baselines.APIs import DGMNetAPI, PCRNetAPI, DGMAPI, ICPAPI
+from src.baselines.APIs import DGMNetAPI, PCRNetAPI, DGMAPI, ICPAPI, FGRAPI, GMMAPI, D3FeatAPI
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 import pyqtgraph.opengl as gl
@@ -103,7 +103,7 @@ class MainWindow(QMainWindow,benchmarkUI):
 
     def verifyPCRAPI(self):
         methodName=self.getPCRMetohd()
-        if methodName=='DGM-Net':
+        if methodName=='DGMNet':
             self.PCRAPI=DGMNetAPI
         elif methodName=='PCRNet':
             self.PCRAPI=PCRNetAPI
@@ -111,6 +111,12 @@ class MainWindow(QMainWindow,benchmarkUI):
             self.PCRAPI=DGMAPI
         elif methodName=='ICP':
             self.PCRAPI=ICPAPI
+        elif methodName=='GMM':
+            self.PCRAPI=GMMAPI
+        elif methodName=='FGR':
+            self.PCRAPI=FGRAPI
+        elif methodName=='D3Feat':
+            self.PCRAPI=D3FeatAPI
 
     def load(self):
         hasGaussNoise=True if self.addGaussNoise.isChecked() else False

@@ -2,24 +2,33 @@ import open3d as o3d
 import numpy as np
 
 class FGR:
-    def __init__(self):
-        pass
-
-    def __call__(self, src, tgt):
-        # 将numpy.array类型的source转换为open3d.geometry.PointCloud类型
-        src = o3d.geometry.PointCloud(o3d.utility.Vector3dVector(src))
-        tgt = o3d.geometry.PointCloud(o3d.utility.Vector3dVector(tgt))
-        source_fpfh = o3d.registration.compute_fpfh_feature(src, o3d.geometry.KDTreeSearchParamHybrid(radius=0.25, max_nn=100))
-        target_fpfh = o3d.registration.compute_fpfh_feature(tgt, o3d.geometry.KDTreeSearchParamHybrid(radius=0.25, max_nn=100))
-
-        # 使用Fast Global Registration算法进行配准
-        threshold = 0.25  # 配准阈值
-        result = o3d.registration.registration_fast_based_on_feature_matching(
-            src, tgt, source_fpfh, target_fpfh,
-            o3d.registration.FastGlobalRegistrationOption(
-                maximum_correspondence_distance=threshold))
-        transform = np.asarray(result.transformation,dtype=np.float32)
-        R = transform[:3,:3]
-        t = transform[:3,3:].transpose(1,0)[0]
-        return R, t
+    def __init__(self, feature_radius=0.025):
+        self.feature_radius = feature_radius
         
+    def __call__(self, src: np.ndarray, tgt: np.ndarray):
+        src_cloud = o3d.geometry.PointCloud()
+        tgt_cloud = o3d.geometry.PointCloud()
+
+        src_cloud.points = o3d.utility.Vector3dVector(src)
+        tgt_cloud.points = o3d.utility.Vector3dVector(tgt)
+
+        # 计算法向量和曲率
+        src_cloud.estimate_normals(
+            o3d.geometry.KDTreeSearchParamHybrid(radius=self.feature_radius * 2, max_nn=30))
+        tgt_cloud.estimate_normals(
+            o3d.geometry.KDTreeSearchParamHybrid(radius=self.feature_radius * 2, max_nn=30))
+        src_fpfh = o3d.pipelines.registration.compute_fpfh_feature(
+            src_cloud, o3d.geometry.KDTreeSearchParamHybrid(radius=self.feature_radius * 5, max_nn=100))
+        tgt_fpfh = o3d.pipelines.registration.compute_fpfh_feature(
+            tgt_cloud, o3d.geometry.KDTreeSearchParamHybrid(radius=self.feature_radius * 5, max_nn=100))
+
+        # 进行配准
+        distance_threshold = self.feature_radius * 1.5
+        result = o3d.pipelines.registration.registration_fgr_based_on_feature_matching(
+            src_cloud, tgt_cloud, src_fpfh, tgt_fpfh,
+            o3d.pipelines.registration.FastGlobalRegistrationOption(
+                maximum_correspondence_distance=distance_threshold))
+        
+        R = result.transformation[:3, :3]
+        t = result.transformation[:3, 3]
+        return R, t

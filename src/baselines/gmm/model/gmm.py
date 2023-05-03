@@ -9,11 +9,11 @@ class GMM:
         
     def __call__(self, src, tgt):
         # 将numpy数组转换为Open3D点云
-        src = o3d.geometry.PointCloud()
-        src.points = o3d.utility.Vector3dVector(src)
+        src_cloud = o3d.geometry.PointCloud()
+        src_cloud.points = o3d.utility.Vector3dVector(src)
         
-        tgt = o3d.geometry.PointCloud()
-        tgt.points = o3d.utility.Vector3dVector(tgt)
+        tgt_cloud = o3d.geometry.PointCloud()
+        tgt_cloud.points = o3d.utility.Vector3dVector(tgt)
         
         # 使用GMM算法估计点云的分布
         src_gmm = GaussianMixture(n_components=self.n_components, max_iter=self.max_iter).fit(src)
@@ -22,11 +22,20 @@ class GMM:
         # 使用估计的分布对点云进行配准
         src_cluster = src_gmm.predict(src)
         tgt_cluster = tgt_gmm.predict(tgt)
-        transformation = self.registration_method(src, tgt)
-        src.transform(transformation)
         
-        # 将配准后的点云转换回numpy数组
-        R = np.asarray(src.get_rotation_matrix())
-        t = np.asarray(src.get_translation())
+        # 获取源点云和目标点云的中心
+        src_center = np.mean(src, axis=0)
+        tgt_center = np.mean(tgt, axis=0)
         
-        return R, t
+        # 计算源点云和目标点云的协方差矩阵
+        src_cov = np.cov((src - src_center).T)
+        tgt_cov = np.cov((tgt - tgt_center).T)
+        
+        # 使用奇异值分解计算旋转矩阵
+        u, _, vh = np.linalg.svd(np.dot(tgt_cov, src_cov.T))
+        rotation_matrix = np.dot(u, vh)
+        
+        # 计算平移向量
+        translation_vector = tgt_center - np.dot(rotation_matrix, src_center)
+        
+        return rotation_matrix, translation_vector

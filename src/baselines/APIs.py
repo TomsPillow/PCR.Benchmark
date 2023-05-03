@@ -6,7 +6,6 @@ from baselines.dgm.model.dgm import DGM
 from baselines.icp.model.icp import ICP
 from baselines.fgr.model.fgr import FGR
 from baselines.gmm.model.gmm import GMM
-from baselines.d3feat.model.d3feat import D3Feat
 
 model=None
 model_type=None
@@ -97,20 +96,8 @@ def GMMAPI(src_points, src_normals, tgt_points, tgt_normals):
     global model_type
     global model
     if model_type==None or model_type !='gmm':
-        model=FGR()
+        model=GMM()
         model_type='gmm'
-    start=time.time()
-    R, t = model(src=src_points, tgt=tgt_points)
-    end=time.time()
-    time_cost=end-start
-    return R, t, time_cost
-
-def D3FeatAPI(src_points, src_normals, tgt_points, tgt_normals):
-    global model_type
-    global model
-    if model_type==None or model_type !='d3feat':
-        model=D3Feat()
-        model_type='d3feat'
     start=time.time()
     R, t = model(src=src_points, tgt=tgt_points)
     end=time.time()

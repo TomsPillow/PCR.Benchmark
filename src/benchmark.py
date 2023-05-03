@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append('.')
 import numpy as np
-from src.baselines.APIs import DGMNetAPI, PCRNetAPI, DGMAPI, ICPAPI, FGRAPI, GMMAPI, D3FeatAPI
+from src.baselines.APIs import DGMNetAPI, PCRNetAPI, DGMAPI, ICPAPI, FGRAPI, GMMAPI
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 import pyqtgraph.opengl as gl
@@ -115,8 +115,6 @@ class MainWindow(QMainWindow,benchmarkUI):
             self.PCRAPI=GMMAPI
         elif methodName=='FGR':
             self.PCRAPI=FGRAPI
-        elif methodName=='D3Feat':
-            self.PCRAPI=D3FeatAPI
 
     def load(self):
         hasGaussNoise=True if self.addGaussNoise.isChecked() else False

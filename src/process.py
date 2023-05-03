@@ -5,7 +5,7 @@ from utils.metrics import R_error, t_error
 from utils.transform import transform
 
 DP_PCRMethods=['DGMNet','PCRNet']
-NORM_PCRMethods=['DGM','ICP','FGR','GMM','D3Feat']
+NORM_PCRMethods=['DGM','ICP','FGR','GMM']
 
 class PCRProcess():
     def __init__(self,h5fs_list,GaussNoise=False,sigma=0.1,bias=0.05):
